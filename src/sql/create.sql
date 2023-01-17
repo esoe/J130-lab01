@@ -33,22 +33,26 @@
     mysql>source file_name.sql
 */
 -- создаем базу данных merchent
-CREATE DATABASE merchent IF NOT EXISTS;
-/*
-    чтобы далее в скрипте не указывать наименование базы данных
-    можно тут указать директиву:
-    USE merchent;
-*/
+CREATE DATABASE IF NOT EXISTS merchent ;
+-- чтобы далее в скрипте не указывать наименование базы данных можно тут указать директиву: USE merchent;
 
 -- создаем таблицу "Продукты" : products
 CREATE TABLE IF NOT EXISTS merchent.products (
-    product_article int(7) ZEROFILL 
-        primary key generated always
-        as identity (start with 1, increment by 1),
+    product_article int(7) ZEROFILL NOT NULL AUTO_INCREMENT,
+    /*
+        Вариант автоинкрементации поля, предложенный на занятии не применим в mysql (предназначен для oracleSQL)
+        в mysql предусмотрены соответствующие переменные,
+        которые могут задаваться глобально или для текущей сессии
+        SET @@SESSION.auto_increment_increment=1;
+        SET @@GLOBAL.auto_increment_increment=1;
+        SET @@SESSION.auto_increment_offset=1;
+        SET @@GLOBAL.auto_increment_offset=1;
+    */
     product_design varchar(50) not null unique,
     product_color varchar(20),
     product_price int not null,
     product_balance int not null,
+    PRIMARY KEY (product_article),
     CHECK (product_price > 0),
     CHECK (product_balance >= 0)
 );
