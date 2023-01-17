@@ -32,7 +32,6 @@
     команды SQL
     mysql>source file_name.sql
 */
-
 -- создаем базу данных merchent
 CREATE DATABASE merchent IF NOT EXISTS;
 /*
