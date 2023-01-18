@@ -60,11 +60,11 @@ CREATE TABLE IF NOT EXISTS merchent.products (
 -- заполняем таблицу "Продукты" тестовыми значениями
 INSERT INTO merchent.products (product_article, product_design, product_color, product_price, product_balance)
 VALUES
-(3251615, 'Стол кухонный', 'белый', 8000, 12),
-(3251616, 'Стол кухонный', '', 8000, 15),
-(3251617, 'Стул столовый гусарский', 'орех', 4000, 0),
-(3251619, 'Стул столовый с высокой спинкой', 'белый', 3500, 37),
-(3251620, 'Стул столовый с высокой спинкой', 'коричневый', 3500, 52);
+    (3251615, 'Стол кухонный', 'белый', 8000, 12),
+    (3251616, 'Стол кухонный', '', 8000, 15),
+    (3251617, 'Стул столовый гусарский', 'орех', 4000, 0),
+    (3251619, 'Стул столовый с высокой спинкой', 'белый', 3500, 37),
+    (3251620, 'Стул столовый с высокой спинкой', 'коричневый', 3500, 52);
 -- выводим данные таблицы "Продукты"
 SELECT * FROM merchent.products;
 
@@ -101,6 +101,27 @@ CREATE TABLE IF NOT EXISTS merchent.requests(
     CHECK (req_status='S' and shipment_date is not null or shipment_date is null)
 );
 -- Заполняем таблицу "Заказы" тестовыми данными
+INSERT INTO merchent.requests
+    (req_register_date,
+    customer,
+    customer_phone,
+    customer_mail,
+    customer_address,
+    req_status,
+    shipment_date)
+VALUES
+('2020-11-20',
+'Сергей Иванов',
+'(981)123-45-67',
+,
+'ул. Веденеева, 20-1-41',
+'S',
+'29-11-20203'),
+(),
+(),
+(),
+(),
+();
 
 
 -- создаем таблицу "Позиции заказа" : positions
