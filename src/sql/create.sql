@@ -38,7 +38,7 @@ CREATE DATABASE IF NOT EXISTS merchent ;
 
 -- создаем таблицу "Продукты" : products
 CREATE TABLE IF NOT EXISTS merchent.products (
-    product_article int(7) NOT NULL, -- 1
+    article int(7) NOT NULL, -- 1
     /*
         Вариант автоинкрементации поля, предложенный на занятии не применим в mysql (предназначен для oracleSQL)
         в mysql предусмотрены соответствующие переменные,
@@ -49,16 +49,16 @@ CREATE TABLE IF NOT EXISTS merchent.products (
         SET @@SESSION.auto_increment_offset=1;
         SET @@GLOBAL.auto_increment_offset=1;
     */
-    product_design varchar(50) not null, -- 2
-    product_color varchar(20), -- 3
-    product_price int not null, -- 4
-    product_balance int not null, -- 5
-    PRIMARY KEY (product_article),
-    CHECK (product_price > 0),
-    CHECK (product_balance >= 0)
+    design varchar(50) not null, -- 2
+    color varchar(20), -- 3
+    price int not null, -- 4
+    balance int not null, -- 5
+    PRIMARY KEY (article),
+    CHECK (price > 0),
+    CHECK (balance >= 0)
 );
 -- заполняем таблицу "Продукты" тестовыми значениями
-INSERT INTO merchent.products (product_article, product_design, product_color, product_price, product_balance)
+INSERT INTO merchent.products (article, design, color, price, balance)
 VALUES
     (3251615, 'Стол кухонный', 'белый', 8000, 12),
     (3251616, 'Стол кухонный', '', 8000, 15),
@@ -71,11 +71,11 @@ SELECT * FROM merchent.products;
 -- создаем таблицу "Заказы" : requests
 CREATE TABLE IF NOT EXISTS merchent.requests(
     -- уникальный идентификатор заказа
-    req_id int NOT NULL AUTO_INCREMENT,
+    id int NOT NULL AUTO_INCREMENT,
     -- дата регистрации заказа
-    req_register_date DATE not null,
+    created DATE not null,
     -- ФИО заказчика
-    customer varchar(100) not null,
+    customer_name varchar(100) not null,
     -- номер телефона заказчика
     customer_phone varchar(50),
     -- адрес электронной почты заказчика
@@ -83,56 +83,50 @@ CREATE TABLE IF NOT EXISTS merchent.requests(
     -- адрес доставки
     customer_address varchar(200),
     -- стадия исполнения заказа
-    req_status varchar(1),
+    position varchar(1),
     -- дата отгрузки заказа
-    shipment_date DATE,
-    PRIMARY KEY(req_id),
+    delivery DATE,
+    PRIMARY KEY(id),
     /*
         Статус товара закодирован символом:
             P - Готовится
             S - Отгружен
             C - Отменен
     */
-    CHECK (req_status in ('P', 'S', 'C')),
+    CHECK (position in ('P', 'S', 'C')),
     /*
         для заказов в статусе «Отгружен» (S) д.б. заполнено,
         для остальных ситуаций - пусто
     */
-    CHECK (req_status='S' and shipment_date is not null or shipment_date is null)
+    CHECK (position='S' and delivery is not null or delivery is null)
 );
 -- Заполняем таблицу "Заказы" тестовыми данными
 INSERT INTO merchent.requests
-    (req_register_date,
-    customer,
+    (created,
+    customer_name,
     customer_phone,
     customer_mail,
     customer_address,
-    req_status,
-    shipment_date)
+    position,
+    delivery)
 VALUES
-('2020-11-20',
-'Сергей Иванов',
-'(981)123-45-67',
-,
-'ул. Веденеева, 20-1-41',
-'S',
-'29-11-20203'),
-(),
-(),
-(),
-(),
-();
-
+('2020-11-20', 'Сергей Иванов', '(981)123-45-67', '', 'ул. Веденеева, 20-1-41', 'S', '2020-11-29'),
+('2020-11-22', 'Алексей Комаров', '(921)001-22-33', '', 'пр. Пархоменко 51-2-123', 'S', '2020-11-29'),
+('2020-11-28', 'Ирина Викторова', '(911)009-88-77', '', 'Тихорецкий пр. 21-21', 'P', ),
+('2020-12-03', 'Павел Николаев', '', 'pasha_nick@mail.ru', 'ул. Хлопина 3-88', 'P', ),
+('2020-12-03', 'Антонина Васильева', '(931)777-66-55', 'antvas66@gmail.com', 'пр. Науки, 11-3-9', 'P', ),
+('2020-12-10', 'Ирина Викторова', '(911)009-88-77', '', 'Тихорецкий пр. 21-21', 'P', );
+-- SELECT * FROM merchent.requests;
 
 -- создаем таблицу "Позиции заказа" : positions
 CREATE TABLE IF NOT EXISTS merchent.positions (
-    request_id int,
-    product_article int (7),
-    current_price int not null,
+    id int,
+    article int (7),
+    price int not null,
     quantity int not null,
-    FOREIGN KEY (request_id) REFERENCES merchent.requests (req_id),
-    FOREIGN KEY (product_article) REFERENCES merchent.requests (product_article),
-    PRIMARY KEY (product_article, request_id),
-    CHECK (current_price > 0),
+    FOREIGN KEY (id) REFERENCES merchent.requests (id),
+    FOREIGN KEY (article) REFERENCES merchent.requests (article),
+    PRIMARY KEY (article, id),
+    CHECK (price > 0),
     CHECK (quantity > 0)
 );
