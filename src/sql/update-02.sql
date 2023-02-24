@@ -13,5 +13,10 @@ SELECT * FROM products
     on products.article = positions.article
 WHERE positions.id = 5;
 
-
+-- не работает из за предусмотренных в таблице products ограничений
+UPDATE products 
+    LEFT JOIN positions
+    on products.article = positions.article
+    SET products.balance = products.balance - positions.quantity
+WHERE positions.id = 5;
     
